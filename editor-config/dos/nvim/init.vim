@@ -1,23 +1,53 @@
+" WINDOWS NeoVIM CONFIG
+
 " ======================================================
 " Plugins
 " ======================================================
 call plug#begin()
 
 " --- Essentials ---
-Plug 'tpope/vim-surround'                      " Surrounding (ysw)
-Plug 'tpope/vim-commentary'                    " Commenting (gcc & gc)
-Plug 'preservim/nerdtree'                      " File explorer
-Plug 'itchyny/lightline.vim'                   " Statusline
-Plug 'preservim/tagbar', {'on': 'TagbarToggle'} " Tagbar
-Plug 'junegunn/fzf'                            " Fuzzy Finder
-Plug 'junegunn/fzf.vim'                        " FZF integration
-Plug 'navarasu/onedark.nvim'                   " Theme
-Plug 'mbbill/undotree'                         " Undo tree
-Plug 'neoclide/coc.nvim', {'branch': 'release'} " LSP & IntelliSense
-Plug 'tpope/vim-fugitive'                      " Git integration
-Plug 'matze/vim-move'                          " Move lines/blocks
-Plug 'voldikss/vim-floaterm'                   " Terminal
-Plug 'alvan/vim-closetag'                      " Auto close HTML tags
+Plug 'tpope/vim-surround'						
+	" syntaxYouSurround: ys{motion}{surround_char}
+		" {motion}: {iw} (inner word), {$)} (rest of line), {s(} (whole line), {ap} (paragraph text), {it} (inner text)  
+	" syntaxChangeSurround: cs{old}{new}
+	" syntaxDeleteSurround: ds{char}
+	" syntaxYouSurroundInVisualMode: V{char}
+Plug 'tpope/vim-commentary'                    
+	" syntaxComment: gcc
+	" syntaxCommentInVisualMode: gc
+	" syntaxCommentMotion: gc{motion}
+Plug 'preservim/nerdtree'
+	" syntaxToggleTree: <Space>nn
+	" syntaxFocusTree: <Space>nf
+	" syntaxMenu: m
+	" syntaxRefresh: R
+	" syntaxChangeRootDirectory: C
+	" syntaxOpenFileInNewTab: t
+	" syntaxOpenFileInHorizontalSplit: i
+	" syntaxOpenFileInVerticalSplit: s
+Plug 'itchyny/lightline.vim'                   
+Plug 'preservim/tagbar', {'on': 'TagbarToggle'}
+	" syntaxToggleTagbar: <Space>tb 
+Plug 'junegunn/fzf'     
+Plug 'junegunn/fzf.vim'    
+	" syntaxFileFinder: <Space>ff
+	" syntaxGitFileFinder: <Space>fg
+Plug 'navarasu/onedark.nvim'                
+Plug 'neoclide/coc.nvim', {'branch': 'release'} 
+	" LSP and Intellisense
+		"Java
+		"JavaScript
+		"TypeScript
+		"JSX/TSX
+Plug 'tpope/vim-fugitive'                      
+	" Git Integration
+Plug 'matze/vim-move'                          
+	" syntaxMoveUpInNormalAndVisualMode: <Alt>k
+	" syntaxMoveDownInNormalAndVisualMode: <Alt>j
+Plug 'voldikss/vim-floaterm'
+	" syntaxToggleFloaterm: <F6>
+Plug 'alvan/vim-closetag'                      
+	" Auto close HTML tags
 
 " --- Language Specific ---
 Plug 'pangloss/vim-javascript'                 " JavaScript syntax
@@ -28,10 +58,20 @@ Plug 'peitalin/vim-jsx-typescript'            " TSX highlighting
 
 call plug#end()
 
+
+
+
+
+
+
+
+
+
 " ======================================================
-" CoC Configuration
+" CoC Config
 " ======================================================
 let g:coc_java_home = 'C:\Program Files\Java\jdk-25'
+let g:tagbar_ctags_bin = 'C:/Users/<Username>/AppData/Local/Microsoft/WinGet/Packages/UniversalCtags.Ctags_Microsoft.Winget.Source_8wekyb3d8bbwe/ctags.exe'
 let g:coc_user_config = {
       \ 'tailwindCSS.includeLanguages': {
       \   'javascript': 'javascript',
@@ -40,10 +80,22 @@ let g:coc_user_config = {
       \ },
       \ 'tailwindCSS.emmetCompletions': v:true
       \ }
+let g:undotree_DiffAuto = 0
+
+
+
+
+
+
+
+
+
 
 " ======================================================
 " General Settings
 " ======================================================
+let mapleader="\<Space>"
+
 " Line numbers & scrolling
 set number
 set relativenumber
@@ -69,10 +121,20 @@ if has("title")
     set title
     let &titlestring = 'NVIM: ' . expand('%:t')
 endif
-autocmd BufEnter * let &titlestring = 'NVIM[' . (expand('%:t') == '' ? '[No File]' : expand('%:t') . ']')
+autocmd BufEnter * let &titlestring = 'NeoVIM -- ' . (expand('%:t') == '' ? '[No File]' : expand('%:t'))
+autocmd VimEnter * if argc() == 0 | NERDTree C:\Users\<Username>\code | endif
+
+
+
+
+
+
+
+
+
 
 " ======================================================
-" Colorscheme
+" Colorscheme Config
 " ======================================================
 colorscheme onedark
 lua << EOF
@@ -83,8 +145,17 @@ require("onedark").setup {
 require("onedark").load()
 EOF
 
+
+
+
+
+
+
+
+
+
 " ======================================================
-" NERDTree
+" Tree
 " ======================================================
 let g:NERDTreeWinSize = 20
 let g:NERDTreeDirArrowExpandable = "+"
@@ -94,21 +165,35 @@ let g:NERDTreeWinPos = "right"
 let g:NERDTreeChDirMode = 2
 let g:NERDTreeMinimalUI = 1
 
-nnoremap <C-f> :NERDTreeFocus<CR>
+nnoremap <Leader>nf :NERDTreeFocus<CR>
 nnoremap <C-n> :NERDTree<CR>
-nnoremap <C-t> :NERDTreeToggle<CR>
+nnoremap <Leader>nn :NERDTreeToggle<CR>
 nnoremap <C-l> :UndotreeToggle<CR>
 
 autocmd VimEnter * let g:project_root = system('git rev-parse --show-toplevel 2>/dev/null') |
       \ if v:shell_error == 0 | execute 'cd ' . g:project_root | execute 'NERDTree' g:project_root | endif
 
+
+
+
+
+
+
+
+
 " ======================================================
-" Lightline
+" Status Line
 " ======================================================
 set laststatus=2
 let g:lightline = {
       \ 'colorscheme': 'one',
-      \ 'component_function': { 'gitbranch': 'LightlineGitBranch' }
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \ },
+      \ 'component_function': {
+      \   'gitbranch': 'FugitiveHead'
+      \ },
       \ }
 
 function! LightlineGitBranch()
@@ -119,6 +204,15 @@ function! LightlineGitBranch()
     return ''
 endfunction
 
+
+
+
+
+
+
+
+
+
 " ======================================================
 " CoC Keybindings
 " ======================================================
@@ -127,13 +221,39 @@ inoremap <expr> <Tab>           pumvisible() ? "\<C-N>" : "\<Tab>"
 noremap <expr> <S-Tab>          pumvisible() ? "\<C-P>" : "\<C-H>"
 nnoremap <F3> :noh<CR>
 
+
+
+
+
+
+
+
+
+
 " ======================================================
 " Floaterm
 " ======================================================
+tnoremap <F6> <C-\><C-n>:FloatermToggle<CR>
+nnoremap <F6> :FloatermToggle<CR>
 let g:floaterm_keymap_new  = '<F7>'
 let g:floaterm_keymap_prev = '<F8>'
 let g:floaterm_keymap_next = '<F9>'
-nnoremap <F5> :w<CR>:FloatermNew --autoclose=0 javac % && java %:r<CR>
+
+
+nnoremap <Leader>tb :TagbarToggle<CR>
+nnoremap <Leader>ff :Files<CR>
+nnoremap <Leader>fb :Buffers<CR>
+nnoremap <Leader>fg :GFiles<CR>
+nnoremap <Leader>ft :Tags<CR>
+
+
+
+
+
+
+
+
+
 
 " ======================================================
 " Disable Middle Mouse
@@ -150,6 +270,15 @@ imap <4-MiddleMouse> <Nop>
 " Quick escape mapping
 inoremap qw <Esc>
 
+
+
+
+
+
+
+
+
+
 " ======================================================
 " Auto Pairs
 " ======================================================
@@ -159,8 +288,18 @@ inoremap [ []<Left>
 inoremap " ""<Left>
 inoremap ' ''<Left>
 
+
+
+
+
+
+
+
+
+
 " ======================================================
 " Autoformat on Save
 " ======================================================
 autocmd BufWritePre *.js,*.ts,*.tsx,*.jsx,*.json,*.html,*.css :CocCommand prettier.formatFile
+
 
