@@ -43,9 +43,9 @@
          ".."xW@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
         "`}p#@@@@$@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
         ".',l<+~l_m@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-                ".)o@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-" |==================================== == NeoVIM Config ===========================|
+                ".)o@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
+	
+" |==================================== == NeoVIM Config
 "
 " Installation of vim-plug
 "	
@@ -78,7 +78,8 @@ Plug 'preservim/nerdtree'
 	" syntaxOpenFileInNewTab: t
 	" syntaxOpenFileInHorizontalSplit: i
 	" syntaxOpenFileInVerticalSplit: s
-Plug 'itchyny/lightline.vim'                   
+Plug 'itchyny/lightline.vim'          
+Plug 'mengelbrecht/lightline-bufferline'
 Plug 'preservim/tagbar', {'on': 'TagbarToggle'}
 	" syntaxToggleTagbar: <Space>tb 
 Plug 'junegunn/fzf'     
@@ -88,7 +89,6 @@ Plug 'junegunn/fzf.vim'
 Plug 'navarasu/onedark.nvim'                
 Plug 'neoclide/coc.nvim', {'branch': 'release'} 
 	" LSP and Intellisense
-		"Java
 		"JavaScript
 	  	"TypeScript
 		"JSX/TSX
@@ -101,6 +101,10 @@ Plug 'voldikss/vim-floaterm'
 	" syntaxToggleFloaterm: <F6>
 Plug 'alvan/vim-closetag'                      
 	" Auto close HTML tags
+Plug 'windwp/nvim-autopairs'
+	" Autopairs
+Plug 'NvChad/nvim-colorizer.lua'
+	" Colorizer for styling
 
 " --- Language Specific ---
 Plug 'pangloss/vim-javascript'                 " JavaScript syntax
@@ -120,10 +124,39 @@ call plug#end()
 
 
 
+lua << EOF
+require('colorizer').setup({
+  filetypes = {
+    'css',
+    'scss',
+    'html',
+    'javascript',
+    'javascriptreact',
+    'typescriptreact'
+  },
+  user_default_options = {
+    names = true,         
+    rgb_fn = true,       
+	hsl_fn = true,          
+    tailwind = true,        
+    mode = "background",    
+  }
+})
+EOF
+
+
+
+
+
+
+
+
+
+
 " ======================================================
 " CoC Config
 " ======================================================
-let g:coc_java_home = 'C:\Program Files\Java\jdk-25'
+
 let g:tagbar_ctags_bin = 'C:/Users/<username>/AppData/Local/Microsoft/WinGet/Packages/UniversalCtags.Ctags_Microsoft.Winget.Source_8wekyb3d8bbwe/ctags.exe'
 let g:coc_user_config = {
       \ 'tailwindCSS.includeLanguages': {
@@ -172,6 +205,11 @@ set clipboard=unnamedplus
 
 nnoremap <leader>w :w<CR>
 nnoremap <leader>W :wa<CR>
+nnoremap <leader>q :q<CR>
+
+lua << EOF
+require("nvim-autopairs").setup({})
+EOF
 
 
 " Window / tab title
@@ -182,8 +220,9 @@ endif
 autocmd BufEnter * let &titlestring = 'NeoVIM -- ' . (expand('%:t') == '' ? '[No File]' : expand('%:t'))
 
 
-
-
+if has('gui_running') 
+	set guioptions-=e
+endif
 
 
 
@@ -273,6 +312,12 @@ require("onedark").setup {
 require("onedark").load()
 EOF
 
+colorscheme onedark
+lua << EOF
+require("onedark").setup { style = "darker", colors = { bg0 = "#111111" } }
+require("onedark").load()
+EOF
+
 
 
 
@@ -292,10 +337,11 @@ let g:NERDTreeHighlightActiveFile = 1
 let g:NERDTreeWinPos = "right"
 let g:NERDTreeChDirMode = 2
 let g:NERDTreeMinimalUI = 1
+let NERDTreeShowHidden=1
 
-nnoremap <Leader>nf :NERDTreeFocus<CR>
+nnoremap <Leader>f :NERDTreeFocus<CR>
 nnoremap <C-n> :NERDTree<CR>
-nnoremap <Leader>nn :NERDTreeToggle<CR>
+nnoremap <Leader>/ :NERDTreeToggle<CR>
 nnoremap <C-l> :UndotreeToggle<CR>
 
 
@@ -310,17 +356,58 @@ nnoremap <C-l> :UndotreeToggle<CR>
 " ======================================================
 " Status Line
 " ======================================================
+let g:lightline#bufferline#show_number  = 2
+let g:lightline#bufferline#shorten_path = 0
+let g:lightline#bufferline#unnamed      = '[No Name]'
+
 set laststatus=2
 let g:lightline = {
-      \ 'colorscheme': 'one',
+	  \ 'colorscheme': 'one',
       \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \   'left': [
+      \       [ 'mode', 'paste' ],
+	  \		  [ 'gitbranch', 'readonly' ]
+      \   ],
+      \   'right': [
+	  \       [ 'lineinfo' ],
+	  \       [ 'percent' ],
+	  \		  [ 'fileformat', 'fileencoding', 'filetype' ],
+	  \		  [ 'buffers' ]
+      \   ]
       \ },
-      \ 'component_function': {
+      \ 'tabline': {
+      \   'right': [ [ 'close' ] ],
+	  \   'left': [ [ 'buffers' ] ]
+      \ },
+	  \ 'component_function': {
       \   'gitbranch': 'FugitiveHead'
       \ },
+      \ 'component_expand': {
+      \   'buffers': 'lightline#bufferline#buffers'
+      \ },
+      \ 'component_type': {
+      \   'buffers': 'tabsel'
       \ }
+      \ }
+
+function! LightlineBufferlineMaxWidth() 
+	return 6 
+endfunction 
+
+let g:lightline#bufferline#max_width = 'LightlineBufferlineMaxWidth' 
+let g:lightline.component_expand.buffers = 'lightline#bufferline#buffers' 
+let g:lightline#bufferline#modified = ' [+]' 
+let g:lightline#bufferline#more_buffers = '...' 
+
+function! LightlineBufferlineDynamicNumbers() 
+	let l:buffers = range(1, bufnr('$')) 
+	let l:map = {} for i in range(len(l:buffers)) 
+	let l:map[i+1] = (i+1) . ':' 
+endfor 
+return l:map 
+endfunction 
+	
+autocmd BufDelete * call lightline#update()
 
 function! LightlineGitBranch()
     if exists('*FugitiveHead')
@@ -329,6 +416,20 @@ function! LightlineGitBranch()
     endif
     return ''
 endfunction
+
+autocmd BufWritePost,TextChanged,TextChangedI * call lightline#update()
+
+nnoremap <Leader>1 <Plug>lightline#bufferline#go(1)
+nnoremap <Leader>2 <Plug>lightline#bufferline#go(2)
+nnoremap <Leader>3 <Plug>lightline#bufferline#go(3)
+nnoremap <Leader>4 <Plug>lightline#bufferline#go(4)
+
+nnoremap <Tab>   <Plug>lightline#bufferline#go_next()
+nnoremap <leader>gp <Plug>lightline#bufferline#go_previous()
+
+nnoremap <Leader>mbn <Plug>lightline#bufferline#move_next()
+nnoremap <Leader>mbp <Plug>lightline#bufferline#move_previous()
+nnoremap <leader>db :bnext<bar>bd#<CR>
 
 
 
@@ -406,26 +507,7 @@ inoremap fd <Esc>
 
 
 " ======================================================
-" Auto Pairs
-" ======================================================
-inoremap ( ()<Left>
-inoremap { {}<Left>
-inoremap [ []<Left>
-inoremap " ""<Left>
-inoremap ' ''<Left>
-
-
-
-
-
-
-
-
-
-
-" ======================================================
 " Autoformat on Save
 " ======================================================
 autocmd BufWritePre *.js,*.ts,*.tsx,*.jsx,*.json,*.html,*.css :CocCommand prettier.formatFile
-
 
