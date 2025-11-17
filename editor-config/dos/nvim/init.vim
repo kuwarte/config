@@ -118,6 +118,7 @@ call plug#end()
 lua require("config.colorizer")
 lua require("config.autopairs")
 lua require("config.onedark")
+lua require("config.keymaps")
 
 
 
@@ -155,7 +156,6 @@ let g:undotree_DiffAuto = 0
 " ======================================================
 " General Settings
 " ======================================================
-let mapleader="\<Space>"
 
 " Line numbers & scrolling
 set number
@@ -178,21 +178,12 @@ set noswapfile
 set timeoutlen=300
 set clipboard=unnamedplus
 
-nnoremap <leader>w :w<CR>
-nnoremap <leader>W :wa<CR>
-nnoremap <leader>q :q<CR>
-
 " Window / tab title
 if has("title")
     set title
     let &titlestring = 'NVIM: ' . expand('%:t')
 endif
 autocmd BufEnter * let &titlestring = 'NeoVIM -- ' . (expand('%:t') == '' ? '[No File]' : expand('%:t'))
-
-
-if has('gui_running') 
-	set guioptions-=e
-endif
 
 
 
@@ -286,11 +277,6 @@ let g:NERDTreeChDirMode = 2
 let g:NERDTreeMinimalUI = 1
 let NERDTreeShowHidden=1
 
-nnoremap <Leader>. :NERDTreeFocus<CR>
-nnoremap <C-n> :NERDTree<CR>
-nnoremap <Leader>/ :NERDTreeToggle<CR>
-nnoremap <C-l> :UndotreeToggle<CR>
-
 
 
 
@@ -366,18 +352,6 @@ endfunction
 
 autocmd BufWritePost,TextChanged,TextChangedI * call lightline#update()
 
-nnoremap <Leader>1 <Plug>lightline#bufferline#go(1)
-nnoremap <Leader>2 <Plug>lightline#bufferline#go(2)
-nnoremap <Leader>3 <Plug>lightline#bufferline#go(3)
-nnoremap <Leader>4 <Plug>lightline#bufferline#go(4)
-
-nnoremap <Tab>   <Plug>lightline#bufferline#go_next()
-nnoremap <leader>gp <Plug>lightline#bufferline#go_previous()
-
-nnoremap <Leader>mbn <Plug>lightline#bufferline#move_next()
-nnoremap <Leader>mbp <Plug>lightline#bufferline#move_previous()
-nnoremap <leader>db :bnext<bar>bd#<CR>
-
 
 
 
@@ -393,7 +367,6 @@ nnoremap <leader>db :bnext<bar>bd#<CR>
 inoremap <silent><expr> <CR>    coc#pum#visible() ? coc#pum#confirm() : "\<CR>"
 inoremap <expr> <Tab>           pumvisible() ? "\<C-N>" : "\<Tab>"
 noremap <expr> <S-Tab>          pumvisible() ? "\<C-P>" : "\<C-H>"
-nnoremap <F3> :noh<CR>
 
 
 
@@ -407,18 +380,9 @@ nnoremap <F3> :noh<CR>
 " ======================================================
 " Floaterm
 " ======================================================
-tnoremap <F6> <C-\><C-n>:FloatermToggle<CR>
-nnoremap <F6> :FloatermToggle<CR>
 let g:floaterm_keymap_new  = '<F7>'
 let g:floaterm_keymap_prev = '<F8>'
 let g:floaterm_keymap_next = '<F9>'
-
-
-nnoremap <Leader>tb :TagbarToggle<CR>
-nnoremap <Leader>ff :Files<CR>
-nnoremap <Leader>fb :Buffers<CR>
-nnoremap <Leader>fg :GFiles<CR>
-nnoremap <Leader>ft :Tags<CR>
 
 
 
@@ -440,9 +404,6 @@ map <3-MiddleMouse> <Nop>
 imap <3-MiddleMouse> <Nop>
 map <4-MiddleMouse> <Nop>
 imap <4-MiddleMouse> <Nop>
-
-" Quick escape mapping
-inoremap fd <Esc>
 
 
 
