@@ -119,6 +119,7 @@ lua require("config.colorizer")
 lua require("config.autopairs")
 lua require("config.onedark")
 lua require("config.keymaps")
+lua require("autocmd")
 
 
 
@@ -184,77 +185,6 @@ if has("title")
     let &titlestring = 'NVIM: ' . expand('%:t')
 endif
 autocmd BufEnter * let &titlestring = 'NeoVIM -- ' . (expand('%:t') == '' ? '[No File]' : expand('%:t'))
-
-
-
-
-
-
-
-
-
-
-" ======================================================
-" Main Menu
-" ======================================================
-function! StartMenu()
-  if argc() != 0
-    return
-  endif
-
-  let l:project_root = system('git rev-parse --show-toplevel 2>/dev/null')
-  if v:shell_error == 0
-    execute 'cd' fnameescape(trim(l:project_root))
-  else
-    execute 'cd C:\Users\<username>\code'
-  endif
-
-  enew
-  setlocal buftype=nofile bufhidden=wipe noswapfile nobuflisted
-  setlocal nonumber norelativenumber nocursorline signcolumn=no
-
-  setlocal modifiable
-
-call append(0, [	                                              
-			\ "                                                                                      ",
-			\ "                  +kWM$m[,.						NeoVIM -- Menu [config: kuwarte]     ",
-			\ "                  `j#mdM@BJ~^.  .'.				-------------------------------------",
-			\ "                  ./@hOZh$@@#r>+Z/'				Manage project at the right side:    ",
-			\ "               ....($aZkB@@@@@@@Bbc}:'.			[ m ] Menu                           ",
-			\ "               :c@@@@@@@@@@@@@@@@@@@@@['			[ a ] Create File/Folder		 ",
-			\ "  )#*Z~:.     .,xB@@@@@@@@@@@@@@@@@@@vi^. .			[ m ] Move or Rename File/Folder ",
-			\ "  ~@@@@@@WaahaM@@$@*a@@@@@@@@@@@@@@@@@@Wahw			[ d ] Delete File/Folder		 ",
-			\ "  .Q@@@@@@@@@@@@$oakpdZW@@@@@@@@@@@@@@@@@C^			[ o ] Open File in System Editor ",
-			\ "   :d@@@@@@@@@#0O*@@@aCzk@@@@@@@@@@@@@@@@@J		[ C ] Open Project Tree				 ",
-			\ "   .:m@@@@@@@@MOQM@@@pXh@@@@@@@@@@@@@@@@@@@		[ :qa ] Exit						 ",
-			\ "   ..<*@@@@@@@$MdObZdZo#Mz!.._w$@@@@@@@@@@@		-------------------------------------",
-			\ "   'XCh@@@@@@@@kXM0v@00@f'>[: ,Z@@@@@@@@@@@		Using fzf:							 ",
-			\ "     ^c@@@@@@@*Zw#@@@@@@z;.{~'_b@@@@@@@@@@@		[ <leader>ff ] Find Files			 ",
-			\ "   ..<a@@@@@#|'``'{#@@@@@ati]O$@@@@@@@@@@@@		[ <leader>fg ] Find Git Files		 ",
-			\ "   -o@@@@@@BY .</.'t@@@@@@@@@@@@@@@@@@@@@@@		[ <leader>fb ] Find Buffer Files	 ",
-			\ "    .'t@@@@@h_..^,_b@@@@@@@@@@@@@@@@@@@@@@@		-------------------------------------",
-			\ "    .l$@@@@@@@W#*B@@@@@@@@@@@@@@@@@@@@@@@@@		Keybindings:						 ",
-			\ "    '|@$@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@		[ <leader>w ] Save File				 ",
-			\ "    .:lf@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@		[ <leader>nf ] Focus Tree			 ", 
-			\ "     .'Y@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@		[ fd ] Switch Modes					 ",
-			\ "   .^/d@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@		[ :wa ] Save All Buffer				 ",
-			\ "   ..^II+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@		-------------------------------------"                                       
-      \ ]) 
-
-
-  file MENU
-
-  setlocal nomodifiable
-
-  silent! vertical rightbelow NERDTree
-  wincmd l
-endfunction
-
-autocmd VimEnter * if argc() == 0 | call StartMenu() | endif
-
-autocmd BufEnter * if &buftype !=# 'nofile' | 
-      \ if bufname('MENU') !=# '' | execute 'bwipeout MENU' | endif | 
-      \ endif
 
 
 
@@ -339,8 +269,6 @@ function! LightlineBufferlineDynamicNumbers()
 endfor 
 return l:map 
 endfunction 
-	
-autocmd BufDelete * call lightline#update()
 
 function! LightlineGitBranch()
     if exists('*FugitiveHead')
@@ -349,8 +277,6 @@ function! LightlineGitBranch()
     endif
     return ''
 endfunction
-
-autocmd BufWritePost,TextChanged,TextChangedI * call lightline#update()
 
 
 
@@ -404,18 +330,4 @@ map <3-MiddleMouse> <Nop>
 imap <3-MiddleMouse> <Nop>
 map <4-MiddleMouse> <Nop>
 imap <4-MiddleMouse> <Nop>
-
-
-
-
-
-
-
-
-
-
-" ======================================================
-" Autoformat on Save
-" ======================================================
-autocmd BufWritePre *.js,*.ts,*.tsx,*.jsx,*.json,*.html,*.css :CocCommand prettier.formatFile
 
