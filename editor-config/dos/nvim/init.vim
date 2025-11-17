@@ -70,8 +70,8 @@ Plug 'tpope/vim-commentary'
 	" syntaxCommentInVisualMode: gc
 	" syntaxCommentMotion: gc{motion}
 Plug 'preservim/nerdtree'
-	" syntaxToggleTree: <Space>nn
-	" syntaxFocusTree: <Space>nf
+	" syntaxToggleTree: <Space>/
+	" syntaxFocusTree: <Space>.
 	" syntaxMenu: m
 	" syntaxRefresh: R
 	" syntaxChangeRootDirectory: C
@@ -115,34 +115,9 @@ Plug 'peitalin/vim-jsx-typescript'            " TSX highlighting
 
 call plug#end()
 
-
-
-
-
-
-
-
-
-
-lua << EOF
-require('colorizer').setup({
-  filetypes = {
-    'css',
-    'scss',
-    'html',
-    'javascript',
-    'javascriptreact',
-    'typescriptreact'
-  },
-  user_default_options = {
-    names = true,         
-    rgb_fn = true,       
-	hsl_fn = true,          
-    tailwind = true,        
-    mode = "background",    
-  }
-})
-EOF
+lua require("config.colorizer")
+lua require("config.autopairs")
+lua require("config.onedark")
 
 
 
@@ -207,11 +182,6 @@ nnoremap <leader>w :w<CR>
 nnoremap <leader>W :wa<CR>
 nnoremap <leader>q :q<CR>
 
-lua << EOF
-require("nvim-autopairs").setup({})
-EOF
-
-
 " Window / tab title
 if has("title")
     set title
@@ -223,6 +193,10 @@ autocmd BufEnter * let &titlestring = 'NeoVIM -- ' . (expand('%:t') == '' ? '[No
 if has('gui_running') 
 	set guioptions-=e
 endif
+
+
+
+
 
 
 
@@ -301,33 +275,6 @@ autocmd BufEnter * if &buftype !=# 'nofile' |
 
 
 " ======================================================
-" Colorscheme Config
-" ======================================================
-colorscheme onedark
-lua << EOF
-require("onedark").setup {
-  style = "darker",
-  colors = { bg0 = "#111111" },
-}
-require("onedark").load()
-EOF
-
-colorscheme onedark
-lua << EOF
-require("onedark").setup { style = "darker", colors = { bg0 = "#111111" } }
-require("onedark").load()
-EOF
-
-
-
-
-
-
-
-
-
-
-" ======================================================
 " Tree
 " ======================================================
 let g:NERDTreeWinSize = 20
@@ -339,7 +286,7 @@ let g:NERDTreeChDirMode = 2
 let g:NERDTreeMinimalUI = 1
 let NERDTreeShowHidden=1
 
-nnoremap <Leader>f :NERDTreeFocus<CR>
+nnoremap <Leader>. :NERDTreeFocus<CR>
 nnoremap <C-n> :NERDTree<CR>
 nnoremap <Leader>/ :NERDTreeToggle<CR>
 nnoremap <C-l> :UndotreeToggle<CR>
