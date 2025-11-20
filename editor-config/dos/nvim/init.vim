@@ -105,6 +105,9 @@ Plug 'windwp/nvim-autopairs'
 	" Autopairs
 Plug 'NvChad/nvim-colorizer.lua'
 	" Colorizer for styling
+Plug 'nvim-lua/plenary.nvim'
+Plug 'folke/todo-comments.nvim'
+	" TODO: and others comments color
 
 " --- Language Specific ---
 Plug 'pangloss/vim-javascript'                 " JavaScript syntax
@@ -117,8 +120,9 @@ call plug#end()
 
 lua require("config.colorizer")
 lua require("config.autopairs")
-lua require("config.onedark")
 lua require("config.keymaps")
+lua require("config.todo-comments")
+lua require("config.onedark")
 lua require("autocmd")
 
 
@@ -157,20 +161,14 @@ let g:undotree_DiffAuto = 0
 " ======================================================
 " General Settings
 " ======================================================
-
-" Line numbers & scrolling
 set number
 set relativenumber
 set scrolloff=5
-
-" Tabs & indentation
 set autoindent
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
 set smarttab
-
-" Editor behavior
 set mouse=a
 set encoding=UTF-8
 set visualbell
@@ -179,7 +177,6 @@ set noswapfile
 set timeoutlen=300
 set clipboard=unnamedplus
 
-" Window / tab title
 if has("title")
     set title
     let &titlestring = 'NVIM: ' . expand('%:t')
@@ -198,7 +195,7 @@ autocmd BufEnter * let &titlestring = 'NeoVIM -- ' . (expand('%:t') == '' ? '[No
 " ======================================================
 " Tree
 " ======================================================
-let g:NERDTreeWinSize = 20
+let g:NERDTreeWinSize = 25
 let g:NERDTreeDirArrowExpandable = "+"
 let g:NERDTreeDirArrowCollapsible = "~"
 let g:NERDTreeHighlightActiveFile = 1
@@ -220,22 +217,23 @@ let NERDTreeShowHidden=1
 " Status Line
 " ======================================================
 let g:lightline#bufferline#show_number  = 2
+" let g:lightline#bufferline#number_separator = ': '
 let g:lightline#bufferline#shorten_path = 0
+let g:lightline#bufferline#smart_path   = 1
 let g:lightline#bufferline#unnamed      = '[No Name]'
 
 set laststatus=2
 let g:lightline = {
-	  \ 'colorscheme': 'one',
+	  \ 'colorscheme': 'rosepine',
       \ 'active': {
       \   'left': [
       \       [ 'mode', 'paste' ],
-	  \		  [ 'gitbranch', 'readonly' ]
+	  \		  [ 'gitbranch', 'readonly', 'buffers' ]
       \   ],
       \   'right': [
 	  \       [ 'lineinfo' ],
 	  \       [ 'percent' ],
 	  \		  [ 'fileformat', 'fileencoding', 'filetype' ],
-	  \		  [ 'buffers' ]
       \   ]
       \ },
       \ 'tabline': {
@@ -243,6 +241,7 @@ let g:lightline = {
 	  \   'left': [ [ 'buffers' ] ]
       \ },
 	  \ 'component_function': {
+	  \   'buffers': 'LightlineBufferlineDynamicNumbers',
       \   'gitbranch': 'FugitiveHead'
       \ },
       \ 'component_expand': {
@@ -262,13 +261,18 @@ let g:lightline.component_expand.buffers = 'lightline#bufferline#buffers'
 let g:lightline#bufferline#modified = ' [+]' 
 let g:lightline#bufferline#more_buffers = '...' 
 
-function! LightlineBufferlineDynamicNumbers() 
-	let l:buffers = range(1, bufnr('$')) 
-	let l:map = {} for i in range(len(l:buffers)) 
-	let l:map[i+1] = (i+1) . ':' 
-endfor 
-return l:map 
-endfunction 
+let g:lightline#bufferline#composed_ordinal_number_map = {}
+for i in range(1, 30)
+	let g:lightline#bufferline#composed_ordinal_number_map[i] = '//' . i . '//'
+endfor
+
+function! LightlineBufferlineDynamicNumbers()
+    let l:map = {}
+    for buf in range(1, bufnr('$'))
+        let l:map[buf] = buf . ':'
+    endfor
+    return l:map
+endfunction
 
 function! LightlineGitBranch()
     if exists('*FugitiveHead')
@@ -330,4 +334,3 @@ map <3-MiddleMouse> <Nop>
 imap <3-MiddleMouse> <Nop>
 map <4-MiddleMouse> <Nop>
 imap <4-MiddleMouse> <Nop>
-
