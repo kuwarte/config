@@ -1,4 +1,22 @@
+
 local api = vim.api
+
+vim.o.scrolloff = 5
+vim.o.autoindent = true
+vim.o.tabstop = 4
+vim.o.softtabstop = 4
+vim.o.shiftwidth = 4
+vim.o.smarttab = true
+vim.o.mouse = "a"
+vim.o.encoding = "UTF-8"
+vim.o.visualbell = true
+vim.o.showmode = false
+vim.o.swapfile = false
+vim.o.timeoutlen = 300
+vim.o.clipboard = "unnamedplus"
+
+vim.wo.number = true
+vim.wo.relativenumber = true
 
 local function start_menu()
     if vim.fn.argc() ~= 0 then return end

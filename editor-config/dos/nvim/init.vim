@@ -1,3 +1,4 @@
+                          
                                    "`)@@hr>`.                                        
                                    ".+$@@@@p);.                                      
                                    ".>a@$B@@@BC~`.                                   
@@ -108,6 +109,8 @@ Plug 'NvChad/nvim-colorizer.lua'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'folke/todo-comments.nvim'
 	" TODO: and others comments color
+	" FIXME:
+	" NOTE:
 
 " --- Language Specific ---
 Plug 'pangloss/vim-javascript'                 " JavaScript syntax
@@ -123,6 +126,7 @@ lua require("config.autopairs")
 lua require("config.keymaps")
 lua require("config.todo-comments")
 lua require("config.onedark")
+lua require("config.nerdtree")
 lua require("autocmd")
 
 
@@ -149,33 +153,7 @@ let g:coc_user_config = {
       \ }
 let g:undotree_DiffAuto = 0
 
-
-
-
-
-
-
-
-
-
-" ======================================================
-" General Settings
-" ======================================================
-set number
-set relativenumber
-set scrolloff=5
-set autoindent
-set tabstop=4
-set softtabstop=4
-set shiftwidth=4
-set smarttab
-set mouse=a
-set encoding=UTF-8
-set visualbell
-set noshowmode
-set noswapfile
-set timeoutlen=300
-set clipboard=unnamedplus
+highlight LineNr guifg=#393744 gui=BOLD
 
 if has("title")
     set title
@@ -193,31 +171,9 @@ autocmd BufEnter * let &titlestring = 'NeoVIM -- ' . (expand('%:t') == '' ? '[No
 
 
 " ======================================================
-" Tree
-" ======================================================
-let g:NERDTreeWinSize = 25
-let g:NERDTreeDirArrowExpandable = "+"
-let g:NERDTreeDirArrowCollapsible = "~"
-let g:NERDTreeHighlightActiveFile = 1
-let g:NERDTreeWinPos = "right"
-let g:NERDTreeChDirMode = 2
-let g:NERDTreeMinimalUI = 1
-let NERDTreeShowHidden=1
-
-
-
-
-
-
-
-
-
-
-" ======================================================
 " Status Line
 " ======================================================
 let g:lightline#bufferline#show_number  = 2
-" let g:lightline#bufferline#number_separator = ': '
 let g:lightline#bufferline#shorten_path = 0
 let g:lightline#bufferline#smart_path   = 1
 let g:lightline#bufferline#unnamed      = '[No Name]'
@@ -281,56 +237,3 @@ function! LightlineGitBranch()
     endif
     return ''
 endfunction
-
-
-
-
-
-
-
-
-
-
-" ======================================================
-" CoC Keybindings
-" ======================================================
-inoremap <silent><expr> <CR>    coc#pum#visible() ? coc#pum#confirm() : "\<CR>"
-inoremap <expr> <Tab>           pumvisible() ? "\<C-N>" : "\<Tab>"
-noremap <expr> <S-Tab>          pumvisible() ? "\<C-P>" : "\<C-H>"
-
-
-
-
-
-
-
-
-
-
-" ======================================================
-" Floaterm
-" ======================================================
-let g:floaterm_keymap_new  = '<F7>'
-let g:floaterm_keymap_prev = '<F8>'
-let g:floaterm_keymap_next = '<F9>'
-
-
-
-
-
-
-
-
-
-
-" ======================================================
-" Disable Middle Mouse
-" ======================================================
-map <MiddleMouse>   <Nop>
-imap <MiddleMouse>  <Nop>
-map <2-MiddleMouse> <Nop>
-imap <2-MiddleMouse> <Nop>
-map <3-MiddleMouse> <Nop>
-imap <3-MiddleMouse> <Nop>
-map <4-MiddleMouse> <Nop>
-imap <4-MiddleMouse> <Nop>
